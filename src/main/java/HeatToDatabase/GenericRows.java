@@ -1,5 +1,8 @@
 package HeatToDatabase;
 
+
+import org.apache.commons.lang3.StringUtils;
+
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -42,6 +45,11 @@ public class GenericRows {
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(nfdNormalizedString).replaceAll("");
     }
+    private String deAccentv2(String string){
+        string = Normalizer.normalize(string, Normalizer.Form.NFD);
+        string = string.replaceAll("[^\\p{ASCII}]", "");
+        return string;
+    }
     public void clearRows(){
         genericRows.clear();
     }
@@ -50,9 +58,16 @@ public class GenericRows {
     }
     public void replaceAll(){
         for(int i=0;i<getRows().size();i++){
+            if(getRows().get(i).getValueType().equals("date") && getRows().get(i).getValue().length() > 10){
+                getRows().get(i).setValue(getRows().get(i).getValue().substring(0,10));
+            }
             getRows().get(i).setValue(genericRows.get(i).getValue().replaceAll("'","."));
             getRows().get(i).setValue(deAccent(getRows().get(i).getValue()));
+            if(getRows().get(i).getValueDBName().equals("Owner")){
+                getRows().get(i).setValue(deAccentv2(getRows().get(i).getValue()));
+            }
         }
+        printAll();
     }
     public boolean isValueDBName(String valueDBName){
         for(int i=0;i<genericRows.size();i++){

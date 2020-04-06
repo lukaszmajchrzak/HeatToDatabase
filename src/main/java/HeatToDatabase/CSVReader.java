@@ -50,8 +50,9 @@ public class CSVReader {
                        genericRows.addSingleValueNoType(splittedLine[i],headers[i]);
                    }
                }
+                dbConnect.sendSingleRow(genericRows);
             }
-            dbConnect.sendSingleRow(genericRows);
+
         genericRows.clearRows();
         }catch(IOException e){
             e.printStackTrace();
@@ -96,7 +97,7 @@ public class CSVReader {
 
         for(int i=0;i<readRows.size();i++){
             logger.sendLog("{HeatToDB} /  Sending Row to dbConnect");
-            dbConnect.sendRow(readRows.get(i));
+//            dbConnect.sendRow(readRows.get(i));
         }
 
 
