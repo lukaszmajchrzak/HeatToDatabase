@@ -10,18 +10,18 @@ import java.util.ArrayList;
 public class CSVReader {
     private String fileName;
     private String filePath;
-    private String destinationPath;
-    private ArrayList<SingleRow> readRows;
+    private String backupDestination;
     GenericRows genericRows = new GenericRows();
     private DbConnect dbConnect;
     private MyLogger logger = new MyLogger();
 
-    public CSVReader(String fileName, String filePath, String destinationPath,ArrayList<SingleRow> readRows,DbConnect dbConnect) {
+    public CSVReader() {
+    }
+
+    public CSVReader(String fileName, String filePath, String backupDestination) {
         this.fileName = fileName;
         this.filePath = filePath;
-        this.destinationPath = destinationPath;
-        this.readRows = readRows;
-        this.dbConnect = dbConnect;
+        this.backupDestination = backupDestination;
     }
 
     /**
@@ -31,6 +31,7 @@ public class CSVReader {
      * 3. After sending row genericRows is cleared for next row</p>
      */
     public void readCSV(){
+        dbConnect = new DbConnect();
         File report = new File(filePath + ((char)92) + ((char)92) + fileName);
         String[] headers;
         String csvSplitter =";";
@@ -60,5 +61,14 @@ public class CSVReader {
         }catch(IOException e){
             e.printStackTrace();
         }
+        if( new File(filePath + ((char)92) + ((char)92) + backupDestination + ((char)92) + ((char)92) + new Date() +((char)92) + ((char)92) + fileName).exists()) {
+            int i=1;
+            while(new File(filePath + ((char)92) + ((char)92) + backupDestination + ((char)92) + ((char)92) + new Date() +((char)92) + ((char)92) + i +((char)92) + ((char)92) + fileName).exists()){
+                i++;
+            }
+
+            new File(filePath + ((char)92) + ((char)92) + backupDestination + ((char)92) + ((char)92) + new Date() +((char)92) + ((char)92) + fileName).renameTo(new File(filePath + ((char)92) + ((char)92) + backupDestination + ((char)92) + ((char)92) + new Date() +((char)92) + ((char)92) + i +((char)92) + ((char)92) + fileName));
+        }
+        report.renameTo(new File(filePath + ((char)92) + ((char)92) + backupDestination + ((char)92) + ((char)92) + new Date() +((char)92) + ((char)92) + fileName));
     }
 }
