@@ -72,7 +72,7 @@ public class DbConnect {
 
         valuesInsert = genericRows.getRows().get(0).getValue();
         for(int i=1;i<genericRows.getRows().size();i++){
-            if(!genericRows.getRows().get(0).getValueType().equals("varchar") && !genericRows.getRows().get(0).getValueType().equals("date")){
+            if(!genericRows.getRows().get(i).getValueType().equals("varchar") && !genericRows.getRows().get(i).getValueType().equals("date")){
                 if(!genericRows.getRows().get(i).getValue().equals(""))
                 valuesInsert += "," +  genericRows.getRows().get(i).getValue();
             } else {
@@ -86,7 +86,7 @@ public class DbConnect {
         } else valuesNamesUpdate += "`" + genericRows.getRows().get(0).getValueDBName() + "` = '" + genericRows.getRows().get(0).getValue() + "'";
 
         for(int i=1;i<genericRows.getRows().size();i++){
-            if(!genericRows.getRows().get(0).getValueType().equals("varchar") && !genericRows.getRows().get(0).getValueType().equals("date")){
+            if(!genericRows.getRows().get(i).getValueType().equals("varchar") && !genericRows.getRows().get(i).getValueType().equals("date")){
                 if(!genericRows.getRows().get(i).getValue().equals(""))
                 valuesNamesUpdate += ",`" + genericRows.getRows().get(i).getValueDBName() + "` =  " + genericRows.getRows().get(i).getValue();
             } else{
@@ -101,7 +101,7 @@ public class DbConnect {
             Statement stmt = this.con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT `Incident ID` FROM HEAT.HEATDATA WHERE `Incident ID`='" + genericRows.getRows().get(0).getValue() +"'");
             if(!rs.next() == false){
-                logger.sendLog("Incident: " + genericRows.getRows().get(0).getValue() + " already exist in DB. updating...");
+                logger.sendLog("{HeatToDb} : @Incident : " + genericRows.getRows().get(0).getValue() + " already exist in DB. updating...");
                 System.out.println("UPDATE HEAT.HEATDATA SET " + valuesNamesUpdate + " WHERE `Incident ID`='"+ genericRows.getRows().get(0).getValue() +"'");
                 stmt.executeUpdate("UPDATE HEAT.HEATDATA SET " + valuesNamesUpdate + " WHERE `Incident ID`='"+ genericRows.getRows().get(0).getValue() +"'");
                 logger.sendLog("Incident " +  genericRows.getRows().get(0).getValue() + " updated!");
@@ -109,7 +109,7 @@ public class DbConnect {
 
                 System.out.println("INSERT INTO HEAT.HEATDATA ("+valuesNamesInsert +") VALUES(" + valuesInsert + ");");
                 stmt.executeUpdate("INSERT INTO HEAT.HEATDATA ("+valuesNamesInsert +") VALUES(" + valuesInsert + ");");
-                logger.sendLog("Incident: " + genericRows.getRows().get(0).getValue()+ " added to database");
+                logger.sendLog("{HeatToDb} @Incident : " + genericRows.getRows().get(0).getValue()+ " added to database");
             }
             con.close();
         } catch(SQLException e){

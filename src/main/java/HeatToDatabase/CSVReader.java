@@ -46,7 +46,7 @@ public class CSVReader {
 
                for(int i=0;i<headers.length;i++){
 //                   System.out.println(headers[i] + " : " + genericRows.getRows().get(i).getValueDBName());
-                   if(genericRows.isValueDBName(headers[i])){
+                   if(genericRows.isValueDBName(headers[i]) && i < splittedLine.length){
                        genericRows.addSingleValueNoType(splittedLine[i],headers[i]);
                    }
                }
@@ -58,49 +58,49 @@ public class CSVReader {
             e.printStackTrace();
         }
     }
-    public void readCSVFile(){
-        boolean isExisting = false;
-        File report = new File(filePath + ((char)92 ) + ((char)92) + fileName);
-        String line;
-        String spliter = ";";
-        String splitedLine[];
-        try {
-            BufferedReader bufferedReader = new BufferedReader(
-                    new InputStreamReader(
-                            new FileInputStream(report)));
-
-            bufferedReader.readLine(); // ignore first column
-
-            while((line = bufferedReader.readLine()) != null) {
-                splitedLine = line.split(spliter);
-                dbConnect.getColumnsNames(genericRows);
-                genericRows.printAll();
-                    if (!splitedLine[46].equals("")) {
-                        Date r;
-                        System.out.println(splitedLine[16]);
-                        readRows.add(new SingleRow((Integer.parseInt(splitedLine[0])), splitedLine[8], splitedLine[2], splitedLine[5], splitedLine[6], splitedLine[7], splitedLine[13], splitedLine[14],splitedLine[16].substring(0,9),splitedLine[46].substring(0,9),
-                                (Integer.parseInt(splitedLine[18])), splitedLine[21], splitedLine[22], splitedLine[23], Boolean.parseBoolean(splitedLine[29].toLowerCase()), Boolean.parseBoolean(splitedLine[34].toLowerCase()),
-                                Boolean.parseBoolean(splitedLine[37].toLowerCase()), Boolean.parseBoolean(splitedLine[35].toLowerCase()), splitedLine[38], splitedLine[36], Integer.parseInt(splitedLine[40]), Integer.parseInt(splitedLine[41]),
-                                Double.parseDouble(splitedLine[44]), splitedLine[48]));
-                        logger.sendLog("{HeatToDB} /  Incident #" + splitedLine[0] + " read.");
-                    } else {
-                        readRows.add(new SingleRow((Integer.parseInt(splitedLine[0])), splitedLine[8], splitedLine[2], splitedLine[5], splitedLine[6], splitedLine[7], splitedLine[13], splitedLine[14],splitedLine[16].substring(0,9), splitedLine[46],
-                                (Integer.parseInt(splitedLine[18])), splitedLine[21], splitedLine[22], splitedLine[23], Boolean.parseBoolean(splitedLine[29].toLowerCase()), Boolean.parseBoolean(splitedLine[34].toLowerCase()),
-                                Boolean.parseBoolean(splitedLine[37].toLowerCase()), Boolean.parseBoolean(splitedLine[35].toLowerCase()), splitedLine[38], splitedLine[36], Integer.parseInt(splitedLine[40]), Integer.parseInt(splitedLine[41]),
-                                Double.parseDouble(splitedLine[44]), splitedLine[48]));
-                        logger.sendLog("{HeatToDB} /  Incident #" + splitedLine[0] + " read.");
-                    }
-            }
-        } catch(IOException e){
-            e.printStackTrace();
-        }
-
-        for(int i=0;i<readRows.size();i++){
-            logger.sendLog("{HeatToDB} /  Sending Row to dbConnect");
-//            dbConnect.sendRow(readRows.get(i));
-        }
-
-
-
-    }
+//    public void readCSVFile(){
+//        boolean isExisting = false;
+//        File report = new File(filePath + ((char)92 ) + ((char)92) + fileName);
+//        String line;
+//        String spliter = ";";
+//        String splitedLine[];
+//        try {
+//            BufferedReader bufferedReader = new BufferedReader(
+//                    new InputStreamReader(
+//                            new FileInputStream(report)));
+//
+//            bufferedReader.readLine(); // ignore first column
+//
+//            while((line = bufferedReader.readLine()) != null) {
+//                splitedLine = line.split(spliter);
+//                dbConnect.getColumnsNames(genericRows);
+//                genericRows.printAll();
+//                    if (!splitedLine[46].equals("")) {
+//                        Date r;
+//                        System.out.println(splitedLine[16]);
+//                        readRows.add(new SingleRow((Integer.parseInt(splitedLine[0])), splitedLine[8], splitedLine[2], splitedLine[5], splitedLine[6], splitedLine[7], splitedLine[13], splitedLine[14],splitedLine[16].substring(0,9),splitedLine[46].substring(0,9),
+//                                (Integer.parseInt(splitedLine[18])), splitedLine[21], splitedLine[22], splitedLine[23], Boolean.parseBoolean(splitedLine[29].toLowerCase()), Boolean.parseBoolean(splitedLine[34].toLowerCase()),
+//                                Boolean.parseBoolean(splitedLine[37].toLowerCase()), Boolean.parseBoolean(splitedLine[35].toLowerCase()), splitedLine[38], splitedLine[36], Integer.parseInt(splitedLine[40]), Integer.parseInt(splitedLine[41]),
+//                                Double.parseDouble(splitedLine[44]), splitedLine[48]));
+//                        logger.sendLog("{HeatToDB} /  Incident #" + splitedLine[0] + " read.");
+//                    } else {
+//                        readRows.add(new SingleRow((Integer.parseInt(splitedLine[0])), splitedLine[8], splitedLine[2], splitedLine[5], splitedLine[6], splitedLine[7], splitedLine[13], splitedLine[14],splitedLine[16].substring(0,9), splitedLine[46],
+//                                (Integer.parseInt(splitedLine[18])), splitedLine[21], splitedLine[22], splitedLine[23], Boolean.parseBoolean(splitedLine[29].toLowerCase()), Boolean.parseBoolean(splitedLine[34].toLowerCase()),
+//                                Boolean.parseBoolean(splitedLine[37].toLowerCase()), Boolean.parseBoolean(splitedLine[35].toLowerCase()), splitedLine[38], splitedLine[36], Integer.parseInt(splitedLine[40]), Integer.parseInt(splitedLine[41]),
+//                                Double.parseDouble(splitedLine[44]), splitedLine[48]));
+//                        logger.sendLog("{HeatToDB} /  Incident #" + splitedLine[0] + " read.");
+//                    }
+//            }
+//        } catch(IOException e){
+//            e.printStackTrace();
+//        }
+//
+//        for(int i=0;i<readRows.size();i++){
+//            logger.sendLog("{HeatToDB} /  Sending Row to dbConnect");
+////            dbConnect.sendRow(readRows.get(i));
+//        }
+//
+//
+//
+//    }
 }

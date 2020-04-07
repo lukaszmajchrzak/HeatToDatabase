@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class GenericRows {
     private ArrayList<GenericSingleValue> genericRows = new ArrayList<>();
-
+    MyLogger logger = new MyLogger();
     public GenericRows() {
     }
 
@@ -31,13 +31,13 @@ public class GenericRows {
             for (int i = 0; i < genericRows.size(); i++) {
                 if (genericRows.get(i).getValueDBName().equals(valueDBName)) {
                     genericRows.get(i).setValue(value);
-                    System.out.println(valueDBName + " : " + value);
+//                    System.out.println(valueDBName + " : " + value);
                     isFound = true;
                 }
             }
             if (!isFound) {
                 genericRows.add(new GenericSingleValue(value, "", valueDBName));
-                System.out.println(valueDBName + " : " + value);
+//                System.out.println(valueDBName + " : " + value);
             }
         }
     private String deAccent(String str) {
@@ -60,12 +60,18 @@ public class GenericRows {
         for(int i=0;i<getRows().size();i++){
             if(getRows().get(i).getValueType().equals("date") && getRows().get(i).getValue().length() > 10){
                 getRows().get(i).setValue(getRows().get(i).getValue().substring(0,10));
+                getRows().get(i).setValue(getRows().get(i).getValue().substring(6,10)+ "-" + getRows().get(i).getValue().substring(3,5) + "-" + getRows().get(i).getValue().substring(0,2));
+
             }
             getRows().get(i).setValue(genericRows.get(i).getValue().replaceAll("'","."));
             getRows().get(i).setValue(deAccent(getRows().get(i).getValue()));
-            if(getRows().get(i).getValueDBName().equals("Owner")){
+            if(getRows().get(i).getValueDBName().equals("Owner") || getRows().get(i).getValueDBName().equals("Customer")){
                 getRows().get(i).setValue(deAccentv2(getRows().get(i).getValue()));
+            if(getRows().get(i).getValueDBName().equals("Description")){
+                getRows().get(i).setValue("Description in incident - sory");
             }
+            }
+            logger.sendLog("{HeatToDB} :  @Data prepared for @Incident : " + getRows().get(0).getValue());
         }
         printAll();
     }
