@@ -13,6 +13,12 @@ public class GenericRows {
     public GenericRows() {
     }
 
+    /**
+     * <p> Method allows to add manually single value to ArrayList (whole row)</p>
+     * @param value - Value from row
+     * @param valueType - Value-Type for database
+     * @param valueDBName - Column name in Database/InputCSV file  [both needs to be equal]
+     */
     public void addSignleValue(String value, String valueType, String valueDBName) {
         boolean isFound = false;
         for (int i = 0; i < genericRows.size(); i++) {
@@ -26,6 +32,12 @@ public class GenericRows {
             if(!isFound)
             genericRows.add(new GenericSingleValue(value, valueType, valueDBName));
         }
+
+    /**
+     * <p> Methods allows to add single value to ARrayList (whole row). DataType is read from database</p>
+     * @param value - Value from row
+     * @param valueDBName - Column name in Database/InputCSV file [both needs to be equal]
+     */
         public void addSingleValueNoType(String value,String valueDBName) {
             boolean isFound = false;
             for (int i = 0; i < genericRows.size(); i++) {
@@ -56,6 +68,14 @@ public class GenericRows {
     public ArrayList<GenericSingleValue> getRows(){
         return genericRows;
     }
+
+    /**
+     * <p> Method prepares data for datbase input:
+     *  1. Change date input from Excel to database -> from dd.mm.yyyy to yyyy-mm-dd
+     *  2. replaces all apostrofe signs to dots
+     *  3. runs deAccent methods for strings
+     *  4. Deletes descr.   - will be deleted </p>
+     */
     public void replaceAll(){
         for(int i=0;i<getRows().size();i++){
             if(getRows().get(i).getValueType().equals("date") && getRows().get(i).getValue().length() > 10){
@@ -75,6 +95,12 @@ public class GenericRows {
         }
         printAll();
     }
+
+    /**
+     * <p> Method returns true if typed String value is in a list of column names</p>
+     * @param valueDBName - Value which will be compared to list of column names from database
+     * @return
+     */
     public boolean isValueDBName(String valueDBName){
         for(int i=0;i<genericRows.size();i++){
             if(genericRows.get(i).getValueDBName().equals(valueDBName))
@@ -82,6 +108,10 @@ public class GenericRows {
         }
         return false;
     }
+
+    /**
+     * <p> Method prints all stored values in GenericRows ArrayList</p>
+     */
     public void printAll(){
         for(int i=0;i<genericRows.size();i++)
         System.out.println(genericRows.get(i).getValueDBName()+ "[" + genericRows.get(i).getValueType() + "]: " + genericRows.get(i).getValue());

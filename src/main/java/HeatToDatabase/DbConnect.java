@@ -42,6 +42,13 @@ public class DbConnect {
         }
         return resources;
     }
+
+    /**
+     * <p> Method read all column names from database and puts them to GenericRows ArrayList,
+     * will be used later for reading data from CSV file </p>
+     * @param genericRows - class which will be fulfilled from database
+     * @return genericRows - fulfilled class (colum names in db)
+     */
     public GenericRows getColumnsNames(GenericRows genericRows){
         this.connect();
         try (Statement stmt = this.con.createStatement()){
@@ -56,6 +63,11 @@ public class DbConnect {
         return genericRows;
     }
 
+    /**
+     * <p> Method reads all non-empty fields (non-empty values) from genericRows, creates SQL INSERT/UPDATE query strings
+     * Executes INSERT query when there is no value with the same 'Incident ID' in database or UPDATE if there is existing 'Incident ID'</p>
+     * @param genericRows - Row stored as single values which will be translated to SQL INSERT/UPDATE query strings
+     */
     public void sendSingleRow(GenericRows genericRows){
         this.connect();
         String valuesNamesInsert = "";
