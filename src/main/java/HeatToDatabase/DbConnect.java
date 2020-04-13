@@ -79,6 +79,7 @@ public class DbConnect {
         valuesNamesInsert = "`" + genericRows.getRows().get(0).getValueDBName() + "`";
         for(int i=1;i<genericRows.getRows().size();i++){
             if(!genericRows.getRows().get(i).getValue().equals(""))
+                System.out.println(valuesInsert.codePointAt(0));
             valuesNamesInsert += ",`" + genericRows.getRows().get(i).getValueDBName() + "`";
         }
 
@@ -113,6 +114,7 @@ public class DbConnect {
             Statement stmt = this.con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT `Incident ID` FROM HEAT.HEATDATA WHERE `Incident ID`='" + genericRows.getRows().get(0).getValue() +"'");
             if(!rs.next() == false){
+                rs
                 logger.sendLog("{HeatToDb} : @Incident : " + genericRows.getRows().get(0).getValue() + " already exist in DB. updating...");
                 System.out.println("UPDATE HEAT.HEATDATA SET " + valuesNamesUpdate + " WHERE `Incident ID`='"+ genericRows.getRows().get(0).getValue() +"'");
                 stmt.executeUpdate("UPDATE HEAT.HEATDATA SET " + valuesNamesUpdate + " WHERE `Incident ID`='"+ genericRows.getRows().get(0).getValue() +"'");

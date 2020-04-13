@@ -1,6 +1,5 @@
 package HeatToDatabase;
 
-import com.google.common.reflect.ClassPath;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
