@@ -32,6 +32,7 @@ public class CSVReader {
      */
     public void readCSV(){
         dbConnect = new DbConnect();
+        dbConnect.connect();
         File report = new File(filePath + ((char)92) + ((char)92) + fileName);
         String[] headers;
         String csvSplitter =";";
@@ -58,6 +59,7 @@ public class CSVReader {
             }
 
         genericRows.clearRows();
+            dbConnect.close();
         }catch(IOException e){
             e.printStackTrace();
         }

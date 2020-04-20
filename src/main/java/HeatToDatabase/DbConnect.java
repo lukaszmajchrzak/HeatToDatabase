@@ -50,7 +50,7 @@ public class DbConnect {
      * @return genericRows - fulfilled class (colum names in db)
      */
     public GenericRows getColumnsNames(GenericRows genericRows){
-        this.connect();
+//        this.connect();
         try (Statement stmt = this.con.createStatement()){
             ResultSet rs = stmt.executeQuery("SELECT DISTINCT COLUMN_NAME, DATA_TYPE FROM information_schema.COLUMNS WHERE table_name='HEATDATA'");
             int i = 0;
@@ -69,7 +69,7 @@ public class DbConnect {
      * @param genericRows - Row stored as single values which will be translated to SQL INSERT/UPDATE query strings
      */
     public void sendSingleRow(GenericRows genericRows){
-        this.connect();
+//        this.connect();
         String valuesNamesInsert = "";
         String valuesInsert= "";
         String valuesNamesUpdate = "";
@@ -79,7 +79,6 @@ public class DbConnect {
         valuesNamesInsert = "`" + genericRows.getRows().get(0).getValueDBName() + "`";
         for(int i=1;i<genericRows.getRows().size();i++){
             if(!genericRows.getRows().get(i).getValue().equals(""))
-                System.out.println(valuesInsert.codePointAt(0));
             valuesNamesInsert += ",`" + genericRows.getRows().get(i).getValueDBName() + "`";
         }
 
@@ -124,7 +123,7 @@ public class DbConnect {
                 stmt.executeUpdate("INSERT INTO HEAT.HEATDATA ("+valuesNamesInsert +") VALUES(" + valuesInsert + ");");
                 logger.sendLog("{HeatToDb} @Incident : " + genericRows.getRows().get(0).getValue()+ " added to database");
             }
-            con.close();
+//            con.close();
         } catch(SQLException e){
             e.printStackTrace();
         }
