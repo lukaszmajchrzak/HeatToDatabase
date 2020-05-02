@@ -1,5 +1,7 @@
 package HeatToDatabase;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import jdk.nashorn.internal.parser.JSONParser;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
@@ -37,7 +39,6 @@ public class MyLogger {
                 producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 //              ObjectMessage message =  session.createObjectMessage();
                 TextMessage message = session.createTextMessage(logMessage);
-
                 // Tell the producer to send the message
 //                System.out.println("Sent message: "+ message.hashCode() + " : " + Thread.currentThread().getName());
                 producer.send(message);

@@ -5,7 +5,7 @@ package HeatToDatabase;
 import java.io.*;
 import java.util.Date;
 
-
+/** @deprecated */
 public class CSVReader {
     private String fileName;
     private String filePath;
