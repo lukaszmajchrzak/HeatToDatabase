@@ -4,7 +4,6 @@ package HeatToDatabase;
 
 import java.io.*;
 import java.util.Date;
-import java.util.ArrayList;
 
 
 public class CSVReader {

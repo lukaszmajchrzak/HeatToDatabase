@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class GenericRows {
@@ -65,6 +66,7 @@ public class GenericRows {
     public void clearRows(){
         genericRows.clear();
     }
+
     public ArrayList<GenericSingleValue> getRows(){
         return genericRows;
     }
@@ -115,6 +117,20 @@ public class GenericRows {
     public void printAll(){
         for(int i=0;i<genericRows.size();i++)
         System.out.println(genericRows.get(i).getValueDBName()+ "[" + genericRows.get(i).getValueType() + "]: " + genericRows.get(i).getValue());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof GenericRows)) return false;
+        GenericRows that = (GenericRows) o;
+        return Objects.equals(genericRows, that.genericRows);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(genericRows);
     }
 }
 
