@@ -8,8 +8,13 @@ import java.text.Normalizer;
 import java.util.regex.Pattern;
 
 public class DbConnect {
+    private ConnectionReader connectionReader;
     protected Connection con;
     private MyLogger logger = new MyLogger();
+
+    public DbConnect(ConnectionReader connectionReader) {
+        this.connectionReader = connectionReader;
+    }
 
     /**
      * <p> Method connects to database using connection string typed in connectionString.xml file
@@ -17,12 +22,16 @@ public class DbConnect {
      * to read the file method runs</p>
      */
 
+
+
     public void connect() {
         try {
-//            this.con = DriverManager.getConnection(conReader.getAddress(), conReader.getUsername(), conReader.getPassword());
-              this.con =DriverManager.getConnection("jdbc:mysql://10.13.135.10:3306/db", "LukMaj", "LukMaj123$%^");
+            String connectionString = connectionReader.getConnectionURL();
+            String username = connectionReader.getUsername();
+            String password = connectionReader.getPassword();
+                this.con = DriverManager.getConnection(connectionString,username,password);
         } catch (SQLException e) {
-            System.out.println(e.toString());
+            e.printStackTrace();
         }
     }
 

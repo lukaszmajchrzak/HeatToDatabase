@@ -12,7 +12,7 @@ public class ReportListener  {
 
     public boolean Listen() {
         File files = new File(filePath);
-//        System.out.println("Checking if file: " + this.fileName + " exist in: " + this.filePath);
+        System.out.println("Checking if file: " + this.fileName + " exist in: " + this.filePath);
         if(files.list() != null)
         for (String file : files.list()) {
             if (file.equals(this.fileName)) {

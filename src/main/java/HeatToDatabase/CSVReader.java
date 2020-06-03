@@ -30,7 +30,6 @@ public class CSVReader {
      * 3. After sending row genericRows is cleared for next row</p>
      */
     public void readCSV(){
-        dbConnect = new DbConnect();
         dbConnect.connect();
         File report = new File(filePath + ((char)92) + ((char)92) + fileName);
         String[] headers;

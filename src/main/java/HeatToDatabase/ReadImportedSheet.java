@@ -2,39 +2,39 @@ package HeatToDatabase;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.quartz.utils.DBConnectionManager;
+import org.apache.poi.ss.usermodel.DateUtil;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
-public class ReadImportedSheet extends ExportFileRader {
+
+public class ReadImportedSheet {
     private String importFileName;
     private String importFilePath;
     private String backupFolder;
-    private DbConnect dbConnect = new DbConnect();
+    private Sheet dataSheet;
+    private DbConnect dbConnect;
     GenericRows genericRows = new GenericRows();
 
     private final int headersRowPosition = 0;
 
 
-    public ReadImportedSheet(String importFileName, String importFilePath) {
-        super(importFileName, importFilePath);
+    public ReadImportedSheet(String importFileName, String importFilePath,Sheet dataSheet, DbConnect dbConnect) {
+
         this.importFileName = importFileName;
         this.importFilePath = importFilePath;
-    }
-
-    public void setDataSheet(String dataSheet) {
-        super.setImportSheetName(dataSheet);
+        this.dataSheet =dataSheet;
+        this.dbConnect = dbConnect;
     }
 
     public void readData() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        Sheet dataSheet = super.readImportExcel();
         Row headersRow = dataSheet.getRow(this.headersRowPosition);
-        dbConnect = new DbConnect();
         dbConnect.connect();
         dbConnect.getColumnsNames(genericRows);
 
@@ -48,27 +48,38 @@ public class ReadImportedSheet extends ExportFileRader {
         }
         i = 1;
         int j;
-        while (dataSheet.getRow(i).getCell(0) != null) {
+        while (dataSheet.getRow(i) != null) {
             j = 0;
             while (dataSheet.getRow(i).getCell(j) != null) {
                 if (genericRows.isValueDBName(headersRow.getCell(j).getStringCellValue())) {
-
                     switch (dataSheet.getRow(i).getCell(j).getCellTypeEnum()) {
                         case STRING:
-                            genericRows.addSingleValueNoType(headersRow.getCell(j).getStringCellValue(), dataSheet.getRow(i).getCell(j).getStringCellValue());
+                            genericRows.addSingleValueNoType(dataSheet.getRow(i).getCell(j).getStringCellValue(),headersRow.getCell(j).getStringCellValue());
+                            break;
+                        case BOOLEAN:
+                            genericRows.addSingleValueNoType(String.valueOf(dataSheet.getRow(i).getCell(j).getBooleanCellValue()),headersRow.getCell(j).getStringCellValue());
                             break;
                         case NUMERIC:
-                            genericRows.addSingleValueNoType(headersRow.getCell(j).getStringCellValue(), String.valueOf(dataSheet.getRow(j).getCell(j).getNumericCellValue()));
+                            if(DateUtil.isCellDateFormatted(dataSheet.getRow(i).getCell(j))) {
+                                genericRows.addSingleValueNoType(sdf.format(dataSheet.getRow(i).getCell(j).getDateCellValue()), headersRow.getCell(j).getStringCellValue());
+                            } else
+                            genericRows.addSingleValueNoType(String.valueOf(dataSheet.getRow(i).getCell(j).getNumericCellValue()),headersRow.getCell(j).getStringCellValue());
                             break;
                     }
                 }
                 j = j + 1;
             }
+            dbConnect.sendSingleRow(genericRows);
             i = i + 1;
         }
-        dbConnect.sendSingleRow(genericRows);
-        this.importFileName = this.importFileName.substring(0,importFileName.length()-4) + sdf.format(new Date()) + this.importFileName.substring(importFileName.length()-4);
-        new File(this.importFilePath + this.importFileName).renameTo(new File(this.importFilePath + this.backupFolder + ((char) 92) + ((char)92 + this.importFileName)));
+
+        try {
+            Files.createDirectories(Paths.get(importFilePath, "backup"));
+        }catch(IOException  e)
+        {
+            System.out.println("folder exist");
+        }
+        new File(this.importFilePath + this.importFileName).renameTo(new File(this.importFilePath + ((char)92) + ((char)92) +"backup" + ((char) 92) + ((char)92) + this.importFileName));
 
     }
 }
